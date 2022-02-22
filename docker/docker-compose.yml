@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+    
+    my-client-web:
+        build: ./
+        container_name: my-client-web
+        networks:
+            - my-client-net
+        volumes:
+            - ../:/var/www/html/
+        ports:
+            - "81:80"
+    
+    my-client-db:
+        image: mysql:8.0
+        container_name: my-client-db
+        networks:
+            - my-client-net
+        volumes:
+            - ./db/:/var/lib/mysql/
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: test
+            
+    my-client-adminer:
+        image: adminer
+        container_name: my-client-adminer
+        networks:
+            - my-client-net
+        ports:
+            - "8081:8080"
+            
+networks:
+    my-client-net:
