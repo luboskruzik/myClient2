@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('register') }}
+{% endblock %}
+
+{% block title %}Hello RegisterController!{% endblock %}
+
+{% block body %}
+    
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'container register-container'}}) }}
+    <h2 class="p-2">Register:</h2>
+{#  TITLE  #}
+    <div class="row p-2">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-8">
+        {% for child in  form.title.children %}
+            {{ form_label(child, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            {{ form_widget(child, {'attr': {'class': 'form-check-input'}}) }}
+        {% endfor %}
+        {{ form_help(form.title) }}
+        {{ form_errors(form.title) }}
+        </div>
+    </div>
+{#  FIRST NAME  #}
+    <div class="row p-2">
+        <div class="col-sm-4">
+        {{ form_label(form.first_name, null, {'label_attr': {'class': 'form-label'}}) }}
+        </div>
+        <div class="col-sm-8">
+        {{ form_widget(form.first_name, {'attr': {'class': 'form-controle'}}) }}
+        {{ form_help(form.first_name) }}
+        {{ form_errors(form.first_name) }}
+        </div>
+    </div>
+{#  LAST NAME  #}
+    <div class="row p-2">
+        <div class="col-sm-4">
+        {{ form_label(form.last_name, null, {'label_attr': {'class': 'form-label'}}) }}
+        </div>
+        <div class="col-sm-8">
+        {{ form_widget(form.last_name, {'attr': {'class': 'form-controle'}}) }}
+        {{ form_help(form.last_name) }}
+        {{ form_errors(form.last_name) }}
+        </div>
+    </div>
+{#  EMAIL  #}
+    <div class="row p-2">
+        <div class="col-sm-4">
+        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+        </div>
+        <div class="col-sm-8">
+        {{ form_widget(form.email, {'attr': {'class': 'form-controle'}}) }}
+        {{ form_help(form.email) }}
+        {{ form_errors(form.email) }}
+        </div>
+    </div>
+{#  PHONE  #}
+    <div class="row p-2">
+        <div class="col-sm-4">
+        {{ form_label(form.phone, null, {'label_attr': {'class': 'form-label'}}) }}
+        </div>
+        <div class="col-sm-8">
+            {{ form_widget(form.phone, {'attr': {'class': 'form-controle'}}) }}
+            {{ form_help(form.phone) }}
+            {{ form_errors(form.phone) }}
+        </div>
+    </div>
+{#  PREFIX, COUNTRY #}
+    {{ form_row(form.prefix) }}
+    {{ form_row(form.country) }}
+{#  PRIVACY POLICY  #}
+    <div class="row p-2">
+        <div class="col-sm-12">
+            <label for="{{ form.privacy_policy.vars.id }}" class="form-check-label">
+                I agree to the processing of personal data according to <a href="">Privacy policy.</a>
+                {{ form_widget(form.privacy_policy, {'attr': {'class': 'form-check-input'}}) }}
+            </label>
+            {{ form_help(form.privacy_policy) }}
+            {{ form_errors(form.privacy_policy) }}
+        </div>
+    </div>
+{#  NEWSLETTER  #}
+    <div class="row p-2">
+        <div class="col-sm-12">
+            <label class="form-check-label">
+                Do you want to receive news about this project? Sign up to the NEWSLETTER.
+                {{ form_widget(form.newsletter, {'attr': {'class': 'form-check-input'}}) }}
+            </label>
+            {{ form_help(form.newsletter) }}
+            {{ form_errors(form.newsletter) }}
+        </div>
+    </div>
+    <div class="row p-2">
+        <button type="submit" class="btn btn-primary">Create!</button>
+    </div>
+{{ form_end(form) }}
+
+{% endblock %}
