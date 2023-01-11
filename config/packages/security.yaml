@@ -4,8 +4,8 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        App\Security\User:
-            algorithm: auto
+#        App\Security\User:
+#            algorithm: auto
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
@@ -19,16 +19,17 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            form_login:
-                # "login" is the name of the route created previously
-                login_path: login
-                check_path: login
-                username_parameter: email
-                password_parameter: password
-                csrf_token_id: xyz
-                csrf_parameter: csrf_token
-                enable_csrf: true
-#            custom_authenticator: App\Security\LoginFormAuthenticator
+#            form_login:
+#                # "login" is the name of the route created previously
+#                login_path: login
+#                check_path: login
+#                default_target_path: login
+#                username_parameter: email
+#                password_parameter: password
+#                csrf_token_id: xyz
+#                csrf_parameter: csrf_token
+#                enable_csrf: true
+            custom_authenticator: App\Security\LoginFormAuthenticator
             logout: true
             remember_me:
                 secret: '%kernel.secret%'

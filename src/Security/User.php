@@ -7,13 +7,127 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    private int $id;
+    
+    private string $title;
+    
+    private string $first_name;
+    
+    private string $last_name;
+    
+    private string $phone;
+    
+    private string $prefix;
+    
+    private string $country;
+    
+    private bool $newsletter;
+    
     private $email;
 
     private $roles = [];
     
     private $password;
+    
 
-    public function getEmail(): ?string
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    
+    public function setId($id): self 
+    {
+        $this->id = $id;
+        
+        return $this;
+    }
+    
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+    
+    public function getFirstName(): string
+    {
+        return $this->first_name;
+    }
+
+    public function setFirstName(string $first_name): self
+    {
+        $this->first_name = $first_name;
+
+        return $this;
+    }
+    
+    public function getLastName(): string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(string $last_name): self
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+    
+    public function getPhone(): string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+    
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    public function setPrefix(string $prefix): self
+    {
+        $this->prefix = $prefix;
+
+        return $this;
+    }
+    
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+    
+    public function getNewsletter(): bool
+    {
+        return $this->newsletter;
+    }
+    
+    public function setNewsletter($newsletter): self 
+    {
+        $this->newsletter = $newsletter;
+        
+        return $this;
+    }
+
+
+    public function getEmail(): string
     {
         return $this->email;
     }

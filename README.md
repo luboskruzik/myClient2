@@ -12,3 +12,6 @@
 - sudo n stable
 - sudo n latest
 
+#Email server
+- mailtrap.io
+

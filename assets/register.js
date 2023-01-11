@@ -28,24 +28,20 @@ class UserPhone {
     }
 }
 
-const user_phone = document.querySelector('#user_phone');
+const user_phone = document.querySelector('#register_user_phone');
 const form = document.querySelector('form');
-const uf = new UserPhone(user_phone);
+const up = new UserPhone(user_phone);
 
 
 user_phone.addEventListener('input' , () => {
-    uf.country = uf.iti.getSelectedCountryData().iso2.toUpperCase();
-    user_phone.value = uf.formatNumber();
+    user_phone.value = up.formatNumber();
 });
 
 form.addEventListener('formdata', (e) => {
-    uf.prefix = uf.iti.getSelectedCountryData().dialCode;
+    up.prefix = up.iti.getSelectedCountryData().dialCode;
+    up.country = up.iti.getSelectedCountryData().iso2.toUpperCase();
   
     const formData = e.formData;
-    formData.set('user[prefix]', uf.prefix);
-    formData.set('user[country]', uf.country);
+    formData.set('register_user[prefix]', up.prefix);
+    formData.set('register_user[country]', up.country);
 });
-
-
-
-

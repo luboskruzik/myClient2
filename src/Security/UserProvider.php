@@ -8,9 +8,18 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use App\Service\MyClient;
 
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
+    private MyClient $client;
+
+    public function __construct(MyClient $client)
+    {
+        $this->client = $client;
+    }
+
     /**
      * Symfony calls this method if you use features like switch_user
      * or remember_me.
@@ -19,6 +28,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      * this method.
      *
      * @throws UserNotFoundException if the user is not found
+     * @throws ExceptionInterface
      */
     public function loadUserByIdentifier($identifier): UserInterface
     {
@@ -26,12 +36,24 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         // The $identifier argument may not actually be a username:
         // it is whatever value is being returned by the getUserIdentifier()
         // method in your User class.
+        $content = json_decode($this->client->getUserByEmail($identifier));
+        $userContent = $content->user;
+        if (false === $userContent) {
+            throw new UserNotFoundException('User not found by identifier');
+        }
         $user = new User();
-        $user->setEmail('lubos@kruzik.cz');
-        $user->setRoles(['ROLE_ADMIN']);
-        $user->setPassword('$2y$13$64s.aq3/znMi5MpDN/NLtuvo7YtI.aOG/wRZbTilhOWKck/63pedi'); //1234
+        $user->setId($userContent->id);
+        $user->setEmail($userContent->email);
+        $user->setTitle($userContent->title);
+        $user->setFirstName($userContent->first_name);
+        $user->setLastName($userContent->last_name);
+        $user->setPhone($userContent->phone);
+        $user->setPrefix($userContent->prefix);
+        $user->setCountry($userContent->country);
+        $user->setNewsletter($userContent->newsletter);
+        $user->setPassword($userContent->password);
+
         return $user;
-//        throw new UserNotFoundException('User not found by identifier');
     }
 
     /**

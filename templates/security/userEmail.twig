@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'container register-container'}}) }}
+    <h2 class="p-2">Create new password</h2>
+    <div class="row p-2">
+        <div class="col-sm-4">
+            {{ form_label(form.email, 'Email:') }}
+        </div>
+        <div class="col-sm-8">
+            {{ form_widget(form.email) }}
+            {{ form_help(form.email, {'help': 'Please fill in the email you have used during your registration.'}) }}
+            {{ form_errors(form.email) }}
+        </div>
+    </div>
+    <div class="row p-2">
+        <button type="submit" class="btn btn-primary">Odeslat</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

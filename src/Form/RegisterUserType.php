@@ -6,9 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Model\User;
+use App\Entity\RegisterUser;
 
-class UserType extends AbstractType
+class RegisterUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -28,7 +28,7 @@ class UserType extends AbstractType
             ->add('phone', Type\TextType::class, [])
             ->add('prefix', Type\HiddenType::class, [])
             ->add('country', Type\HiddenType::class, [])
-            ->add('privacy_policy', Type\CheckboxType::class)
+            ->add('privacy_policy', Type\CheckboxType::class, [])
             ->add('newsletter', Type\CheckboxType::class, [
                 'required' => false
             ])
@@ -38,7 +38,7 @@ class UserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => RegisterUser::class,
         ]);
     }
 }

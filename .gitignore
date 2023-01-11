@@ -9,6 +9,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+/.idea/
 /nbproject
 /docker/db
 
