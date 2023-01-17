@@ -31,6 +31,7 @@ class MyClient
         $response = $this->client->request(
             'GET',
             $this->params->get('api_url') . '/v1/user',
+//            'http://localhost/v1/user',
             [
                 'query' => [
                     'email' => $email

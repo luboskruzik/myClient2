@@ -28,3 +28,4 @@ services:
             # '$params' is the parameter name of the ParameterBagInterface service
             # 'parameter_bag' is the class name of the ParameterBagInterface service
             $params: '@parameter_bag'
+#        public: true
