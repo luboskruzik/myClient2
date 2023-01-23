@@ -1,13 +1,17 @@
-Jenkinsfile (Declarative Pipeline)
-/* Requires the Docker Pipeline plugin */
-pipeline {
-    agent { docker { image 'php:8.1.11-alpine' } }
-    stages {
-        stage('build') {
-            steps {
-                sh 'php --version'
-                sh 'echo "Hello World"'
-            }
-        }
+node {
+    stage('preparation') {
+        // Checkout the master branch
+        git branch: 'master', url: 'https://github.com/luboskruzik/myClient2.git'
+    }
+    stage("composer_install") {
+        sh 'composer install'
+    }
+    stage("npm_install") {
+        sh 'npm install'
+        sh 'npm run build'
+    }
+    stage("phpunit") {
+        sh 'php bin/phpunit --log-junit reports/report.xml'
+        junit 'reports/report.xml'
     }
 }
