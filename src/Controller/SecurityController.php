@@ -9,6 +9,9 @@ use App\Entity\RegisterUser;
 use App\Repository\RegisterUserRepository;
 use App\Model\UserPassword;
 use App\Model\UserEmail;
+use App\Service\MyClient;
+use App\Service\MyVerifyEmailHelper;
+use App\Security\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -17,15 +20,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Service\MyClient;
 //use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Security\User;
 
 class SecurityController extends AbstractController
 {
@@ -55,9 +55,9 @@ class SecurityController extends AbstractController
     public function register(
         Request $request, 
         MailerInterface $mailer,
-        VerifyEmailHelperInterface $verifyEmailHelper,
         ManagerRegistry $doctrine,
-        RegisterUserRepository $registerUserRepository
+        RegisterUserRepository $registerUserRepository,
+        MyVerifyEmailHelper $helper
         )
     {
         $user = new RegisterUser();
@@ -72,13 +72,8 @@ class SecurityController extends AbstractController
 //            $entityManager->flush();
             $registerUserRepository->add($user, true);
             
-            $signatureComponents = $verifyEmailHelper->generateSignature(
-                'verify',
-                $user->getId(),
-                $user->getEmail(),
-                ['id' => $user->getId()]
-            );
-            $signedUrl = $signatureComponents->getSignedUrl();
+            $signedUrl = $helper->getSignedUrl($user);
+
             $email = (new TemplatedEmail())
                 ->from(new Address('myClient@gmail.com', 'myClient team'))
                 ->to(new Address($user->getEmail(), $user->getFirstName()))
@@ -111,7 +106,7 @@ class SecurityController extends AbstractController
      */
     public function verifyUserEmailAndCreatePassword(
         Request $request,
-        VerifyEmailHelperInterface $verifyEmailHelper,
+        MyVerifyEmailHelper $helper,
         ManagerRegistry $doctrine,
         RegisterUserRepository $registerUserRepository,
         MyClient $client,
@@ -126,12 +121,9 @@ class SecurityController extends AbstractController
         }
         
         try {
-            $verifyEmailHelper->validateEmailConfirmation(
-                $request->getUri(),
-                $user->getId(),
-                $user->getEmail(),
-            );
-        } catch (Exception\VerifyEmailExceptionInterface $e) {
+            $helper->verifySignedUrl($user, $request->getUri());
+                
+        } catch (VerifyEmailExceptionInterface $e) {
             switch(true) {
                 case $e instanceof Exception\ExpiredSignatureException:
                     $message = 'expired signature';
@@ -144,12 +136,11 @@ class SecurityController extends AbstractController
                     break;
                 default:
                     $message = 'something is wrong';
-
             }
             $this->addFlash('error', $message);
             return $this->redirectToRoute('register');
         }
-
+        
         $userPassword = new UserPassword();
         $form = $this->createForm(UserPasswordType::class, $userPassword);
         $form->handleRequest($request);
